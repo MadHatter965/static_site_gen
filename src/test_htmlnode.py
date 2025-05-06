@@ -2,6 +2,7 @@
 import unittest
 from htmlnode import HTMLNode
 from htmlnode import LeafNode
+from htmlnode import ParentNode
 
 class TestHTMLNode(unittest.TestCase):
     def test_props_to_html_with_multiple_props(self):
@@ -37,6 +38,27 @@ class TestHTMLNode(unittest.TestCase):
         node = LeafNode("p", "Some text.", {})
         self.assertEqual(node.to_html(), "<p>Some text.</p>")
 
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
 
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span><b>grandchild</b></span></div>",
+        )
+      
+    def test_missing_tag(self):
+        with self.assertRaises(ValueError):
+            ParentNode(None, [LeafNode("b", "oops")]).to_html()
+        
+    def test_missing_children(self):
+        with self.assertRaises(ValueError):
+            ParentNode("div", None).to_html()    
+            
 if __name__ == "__main__":
     unittest.main()
