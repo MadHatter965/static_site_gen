@@ -1,7 +1,7 @@
 from textnode import TextNode, TextType
 
 def main():
-    # Create a sample TextNode (this is just an example)
+    # sample TextNode
     node = TextNode(
         "TESTING MY CODE",
         TextType.LINK,
